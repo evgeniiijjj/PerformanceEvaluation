@@ -48,7 +48,7 @@ public class PerformanceEvaluation {
         int threadsNum = Runtime.getRuntime().availableProcessors();
         int numbersArraySize = array.length;
 
-        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        ExecutorService service = Executors.newFixedThreadPool(threadsNum);
         BlockingQueue<Callable<String>> queue = new LinkedBlockingQueue<>();
 
         int threadsNumHalf = threadsNum / 2;
@@ -65,10 +65,8 @@ public class PerformanceEvaluation {
         }
 
         long start = System.currentTimeMillis();
-        long finish = start;
         try {
             List<Future<String>> futures = service.invokeAll(queue);
-            finish = System.currentTimeMillis();
             while (!futures.isEmpty()) {
                 Iterator<Future<String>> it = futures.iterator();
                 while (it.hasNext()) {
@@ -83,6 +81,7 @@ public class PerformanceEvaluation {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+        long finish = System.currentTimeMillis();
 
         service.shutdown();
 
