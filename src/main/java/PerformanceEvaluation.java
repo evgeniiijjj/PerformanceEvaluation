@@ -67,16 +67,9 @@ public class PerformanceEvaluation {
         long start = System.currentTimeMillis();
         try {
             List<Future<String>> futures = service.invokeAll(queue);
-            while (!futures.isEmpty()) {
-                Iterator<Future<String>> it = futures.iterator();
-                while (it.hasNext()) {
-                    Future<String> future = it.next();
-                    if (future.isDone()) {
-                        String result = future.get();
-                        //System.out.println(result);
-                        it.remove();
-                    }
-                }
+            for (Future<String> future : futures) {
+                String result = future.get();
+                //System.out.println(result);
             }
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
